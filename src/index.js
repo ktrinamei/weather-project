@@ -44,7 +44,7 @@ currentDate.innerHTML = `${day}, ${date} ${month}, ${year} ${hours}:${minutes}`;
 
 // CITY SEARCH
 function citySearch(event) {
-  let apiKey = "f5029b784306910c19746e40c14d6cd3";
+  let apiKey = "62bc298785543e137bc6756e514eb1c3";
   let units = "metric";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(showTemperature);
@@ -54,10 +54,11 @@ function search(event) {
   event.preventDefault();
   let searchInput = document.querySelector("#search-input").value;
   citySearch(searchInput);
-
-  // let h1 = document.querySelector("h1");
-  // h1.innerHTML = `${searchInput.value}`;
 }
+
+//   let h1 = document.querySelector("h1");
+//   h1.innerHTML = `${searchInput.value}`;
+// }
 
 let form = document.querySelector("#search-city");
 form.addEventListener("submit", search);
@@ -67,7 +68,7 @@ function showTemperature(response) {
   let cityInput = document.querySelector(".city");
   cityInput.innerHTML = response.data.name;
 
-  let temperature = Math.round(response.data.main.temp);
+  let temperature = Math.round(celciusTemperature);
   let cityTemperature = document.querySelector(".current-temp");
   cityTemperature.innerHTML = `${temperature}°C`;
 
@@ -76,6 +77,8 @@ function showTemperature(response) {
   highTemperature.innerHTML = `High ${Math.round(
     response.data.main.temp_max
   )}°C |`;
+
+  celciusTemperature = response.data.main.temp;
 
   let lowTemperature = document.querySelector(".current-low-temp");
   lowTemperature.innerHTML = `Low ${Math.round(response.data.main.temp_min)}°C`;
@@ -89,6 +92,32 @@ function showTemperature(response) {
   let humidityPercentage = document.querySelector("#humidity-value");
   humidityPercentage.innerHTML = `Humidity | ${response.data.main.humidity} %`;
 }
+
+// CELCIUS AND FAHRENHEIT ICON SWITCH
+function showFahrenheitTemp(event) {
+  event.preventDefault();
+  let fahrenheitTemp = (celsiusTemp * 9) / 5 + 32;
+  celsiusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
+  let cityTemperature = document.querySelector(".current-temp");
+  cityTemperature.innerHTML = Math.round(fahrenheitTemp);
+}
+
+function showCelsiusTemp(event) {
+  event.preventDefault();
+  celsiusLink.classList.add("active");
+  fahrenheitLink.classList.remove("active");
+  let cityTemperature = document.querySelector(".current-temp");
+  cityTemperature.innerHTML = Math.round(celsiusTemp);
+}
+
+let celsiusTemp = null;
+
+let fahrenheitLink = document.querySelector("#fahrenheit-link");
+fahrenheitLink.addEventListener("click", showFahrenheitTemp);
+
+let celsiusLink = document.querySelector("#celsius-link");
+celsiusLink.addEventListener("click", showCelsiusTemp);
 
 // GEO-LOCATION BUTTON
 function searchLocation(position) {
